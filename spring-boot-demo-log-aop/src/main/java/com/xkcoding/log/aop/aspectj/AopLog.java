@@ -11,6 +11,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -83,7 +85,6 @@ public class AopLog {
 	public void afterReturning() {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = Objects.requireNonNull(attributes).getRequest();
-
 		Long start = (Long) request.getAttribute(START_TIME);
 		Long end = System.currentTimeMillis();
 		log.info("【请求耗时】：{}毫秒", end - start);
@@ -92,4 +93,19 @@ public class AopLog {
 		UserAgent userAgent = UserAgent.parseUserAgentString(header);
 		log.info("【浏览器类型】：{}，【操作系统】：{}，【原始User-Agent】：{}", userAgent.getBrowser().toString(), userAgent.getOperatingSystem().toString(), header);
 	}
+
+    /**
+     * 抛异常后的操作  收集异常日志
+     * @param exception
+     */
+	@AfterThrowing(pointcut = "log()",throwing = "exception")
+	public void throwing(Exception exception){
+        List<String> logList = new ArrayList<>();
+        log.error("报错类型：{},报错信息：{}",exception.getClass(),exception.getMessage());
+        for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
+            log.error(stackTraceElement.toString());
+        }
+//	    log.error("报错日志：{}",logList);
+    }
+
 }

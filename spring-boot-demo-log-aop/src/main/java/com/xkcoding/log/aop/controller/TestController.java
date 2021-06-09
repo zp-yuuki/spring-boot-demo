@@ -5,6 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 测试 Controller
@@ -29,6 +32,8 @@ public class TestController {
 	 */
 	@GetMapping("/test")
 	public Dict test(String who) {
+        List<String> a = new ArrayList<>();
+        System.out.println(a.get(1));
 		return Dict.create().set("who", StrUtil.isBlank(who) ? "me" : who);
 	}
 
