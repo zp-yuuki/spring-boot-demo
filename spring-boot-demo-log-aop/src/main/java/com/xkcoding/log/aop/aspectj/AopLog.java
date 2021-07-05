@@ -105,7 +105,6 @@ public class AopLog {
         for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
             log.error(stackTraceElement.toString());
         }
-//	    log.error("报错日志：{}",logList);
     }
 
 }
